@@ -21,7 +21,7 @@ class GatewayController extends Controller
         // $token = $request->token;
         $token = '$2y$10$V9SLEafi3QeSaC9dpiDeo.njdM805jVuVjMdCQzM023GoR2J7ztGO';
 
-        // Incase payload is being sent
+        // Incase payload is being sent || For POST requests
         $data = $request->data;
 
         $gateway = Gateway::where('API_NAME', $api_name)->get();
@@ -32,13 +32,13 @@ class GatewayController extends Controller
         }
 
         # Make Call to API
-        $result = forward($gateway->API_URL, $gateway->API_METHOD, $data);
+        $result = $this->forward($gateway->API_URL, $gateway->API_METHOD, $data);
 
         return $result;
 
     }
 
-    public function forward($api_url, $api_method, $data){
+    protected function forward($api_url, $api_method, $data){
         $client = new \GuzzleHttp\Client();
 
         $response = $client->request("$api_method", $api_url, [$data]);
